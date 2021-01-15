@@ -3,11 +3,17 @@ public class Main {
 
         Main m = new Main();
 
-        String input = "ABCDEFGHIJKLMNOQRSTUVWXYZ";
+        String input = "Hallo Welt, holla die Waldfee, gell?!";
 
-        String key = "\u0000\u0001"; // shift by 1 AND 0
+        String key = "123j12nkjf sdaoök2l§";
 
-        System.out.println(m.cryptVigenere(input, key));
+        String encryptedText = m.cryptVigenere(input, key);
+
+        System.out.println("Encrypted text: " + encryptedText);
+
+        String decryptedText = m.decryptVigenere(encryptedText, key);
+
+        System.out.println("Decrypted text: " + decryptedText);
     }
 
     public String crypt(String input, String key) {
@@ -37,6 +43,11 @@ public class Main {
         return overflow ? (char) (Character.MAX_VALUE + match) : (char) match;
     }
 
+    public String createVigenereKeyFrom(String input, String key)
+    {
+        return matchKeyToInputLength(input, key);
+    }
+
     private String matchKeyToInputLength(String input, String key) {
         int keyTimes = input.length() / key.length();
 
@@ -50,7 +61,7 @@ public class Main {
     public String cryptVigenere(String input, String key) {
         char[] ciphertext = new char[input.length()];
 
-        String matchedKey = matchKeyToInputLength(input, key);
+        String matchedKey = createVigenereKeyFrom(input, key);
 
         for(int i = 0; i < input.length(); i++)
         {
@@ -61,10 +72,15 @@ public class Main {
     }
 
     public String decryptVigenere(String input, String key) {
-        String cleartext = "";
+        char[] cleartext = new char[input.length()];
 
-        String fullsizeKey = "";
+        String matchedKey = createVigenereKeyFrom(input, key);
 
-        return cleartext;
+        for(int i = 0; i < input.length(); i++)
+        {
+            cleartext[i] = decryptCaesar(input.charAt(i), matchedKey.charAt(i));
+        }
+
+        return new String(cleartext);
     }
 }
