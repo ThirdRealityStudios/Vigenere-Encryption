@@ -3,9 +3,9 @@ public class Main {
 
         Main m = new Main();
 
-        String input = "Holla die Waldfee, gell? AA";
+        String input = "ABCDEFGHIJKLMNOQRSTUVWXYZ";
 
-        String key = "\u0000" + "\u0001"; // shift by 1 AND 0
+        String key = "\u0000\u0001"; // shift by 1 AND 0
 
         System.out.println(m.cryptVigenere(input, key));
     }
@@ -26,7 +26,6 @@ public class Main {
         // Prevent overflow issues
         char mod = (char) Math.floorMod(match, Character.MAX_VALUE);
 
-
         return mod;
     }
 
@@ -38,59 +37,34 @@ public class Main {
         return overflow ? (char) (Character.MAX_VALUE + match) : (char) match;
     }
 
-    public String cryptVigenereRange(String input, int initialOffset, String key, int maxLength) {
-        String ciphertext = "";
+    private String matchKeyToInputLength(String input, String key) {
+        int keyTimes = input.length() / key.length();
 
-        // Attach the key as long as it fits and does not exceed the length of the input.
-        for(int i = 0; i < key.length() && i < maxLength; i++)
-        {
-            ciphertext += cryptCaesar(input.charAt(initialOffset + i), key.charAt(i));
-        }
+        int keyPart = input.length() - (keyTimes * key.length());
 
-        return ciphertext;
-    }
+        String missingPart = keyPart > 0 ? key.substring(0, keyPart) : "";
 
-    public String decryptVigenereRange(String input, int initialOffset, String key, int maxLength) {
-        String ciphertext = "";
-
-        // Attach the key as long as it fits and does not exceed the length of the input.
-        for(int i = 0; i < key.length() && i < maxLength; i++)
-        {
-            ciphertext += decryptCaesar(input.charAt(initialOffset + i), key.charAt(i));
-        }
-
-        return ciphertext;
+        return key.repeat(keyTimes) + missingPart;
     }
 
     public String cryptVigenere(String input, String key) {
-        int maxTimes = input.length() / key.length();
+        char[] ciphertext = new char[input.length()];
 
-        String ciphertext = "";
+        String matchedKey = matchKeyToInputLength(input, key);
 
-        for(int i = 0; i < maxTimes; i++) {
-            ciphertext += cryptVigenereRange(input, i * key.length(), key, key.length());
+        for(int i = 0; i < input.length(); i++)
+        {
+            ciphertext[i] = cryptCaesar(input.charAt(i), matchedKey.charAt(i));
         }
 
-        int remainingLength = input.length() - key.length() * maxTimes;
-
-       ciphertext += cryptVigenereRange(ciphertext, input.length() - remainingLength - 1, key, remainingLength);
-
-        return ciphertext;
+        return new String(ciphertext);
     }
 
     public String decryptVigenere(String input, String key) {
-        int maxTimes = input.length() / key.length();
+        String cleartext = "";
 
-        String ciphertext = "";
+        String fullsizeKey = "";
 
-        for(int i = 0; i < maxTimes; i++) {
-            ciphertext += decryptVigenereRange(input, i * key.length(), key, key.length());
-        }
-
-        int remainingLength = input.length() - key.length() * maxTimes;
-
-        ciphertext += decryptVigenereRange(ciphertext, input.length() - remainingLength - 1, key, remainingLength);
-
-        return ciphertext;
+        return cleartext;
     }
 }
