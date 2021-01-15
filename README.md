@@ -1,6 +1,6 @@
-# Vigenere encryption implementation
+# Vigenere encryption and decryption implementation
 
-This is a simple implementation of the Vigenere encryption algorithm.
+This is a simple implementation of the Vigenere encryption and decryption algorithm.
 I just created this due to a short school task we've gotten..
 
 **Note!**
